@@ -5,7 +5,8 @@
  * student_array - global array to hold student objects
  * @type {Array}
  */
-var student_array = [];
+// var student_array = [];
+var student_array = [{name: "Andy", course: "Math", grade: 100}, {name: "Tara", course: "Baking", grade: 50}];
 
 /**
  * inputIds - id's of the elements that are used to add students
@@ -16,6 +17,8 @@ var student_array = [];
  * addClicked - Event Handler when user clicks the add button
  */
 $(document).ready(function(){
+    // reset();
+    updateStudentList();
     $("div.container").on('click', '.btn-success', function() {
         console.log("Add button works");
         addStudent();
@@ -31,8 +34,10 @@ $(document).ready(function(){
 
     $("div.container").on('click', '.btn-danger', function() {
         console.log("Delete button works");
-        $(this).parent().parent().remove();
+        var currentStudent = $(this);
 
+        // removeStudent();
+        // updateStudentList();
     });
 });
 
@@ -42,15 +47,17 @@ $(document).ready(function(){
  * @return undefined
  */
 function addStudent() {
-    var studentName = $("#studentName")["0"].value;
-    var studentCourse = $("#course")["0"].value;
-    var studentGrade = $("#studentGrade")["0"].value;
+    var studentName = $("#studentName").val();
+    var studentCourse = $("#course").val();
+    var studentGrade = $("#studentGrade").val();
     var studentData = {
         name: studentName,
         course: studentCourse,
         grade: studentGrade
     };
-    if (studentName === '' || studentCourse === '' || studentGrade === '' || !  isNaN(studentGrade)){
+    if (studentName === '' || studentCourse === '' || studentGrade === '') {
+        return;
+    } else if (isNaN(studentGrade)) {
         return;
     } else {
         student_array.push(studentData);
@@ -96,8 +103,11 @@ function updateData() {
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body - ** Confused... **
  */
-function updateStudentList(studentData) {
-
+function updateStudentList() {
+    for (var i = 0; i < student_array.length; i++){
+        console.log("Update student list for loop works");
+        addStudentToDom(student_array[i]);
+    }
 }
 
 /**
@@ -105,11 +115,11 @@ function updateStudentList(studentData) {
  * into the .student_list tbody
  * @param studentObj
  */
-function addStudentToDom(studentData) {
+function addStudentToDom(studentObj) {
     var studentListItem = $("<tr>");
-    var nameDomElement = $("<td>").text(studentData.name);
-    var courseDomElement = $("<td>").text(studentData.course);
-    var gradeDomElement = $("<td>").text(studentData.grade);
+    var nameDomElement = $("<td>").text(studentObj.name);
+    var courseDomElement = $("<td>").text(studentObj.course);
+    var gradeDomElement = $("<td>").text(studentObj.grade);
     var deletecellDomElement = $("<td>");
     var delButton = $("<button>", {
         type: "button",
@@ -123,13 +133,15 @@ function addStudentToDom(studentData) {
     $("tbody").append(studentListItem);
 }
 
+
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
 function reset() {
     $("tbody tr").remove();
+    student_array = [];
 }
 
 /**
- * Listen for the document to load and reset the data to the initial state - ** Researching **
+ * Listen for the document to load and reset the data to the initial state
  */
