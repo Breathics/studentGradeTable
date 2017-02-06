@@ -11,8 +11,6 @@ var student_array = [];
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
  */
-// var inputIds =
-
 
 /**
  * addClicked - Event Handler when user clicks the add button
@@ -33,8 +31,9 @@ $(document).ready(function(){
 
     $("div.container").on('click', '.btn-danger', function() {
         console.log("Delete button works");
-        deleteStudentListItem();
-    })
+        $(this).parent().parent().remove();
+
+    });
 });
 
 /**
@@ -130,11 +129,6 @@ function addStudentToDom(studentData) {
 function reset() {
     $("tbody tr").remove();
 }
-
-function deleteStudentListItem() {
-    $(this).parent().parent().remove();
-}
-
 
 /**
  * Listen for the document to load and reset the data to the initial state - ** Researching **
