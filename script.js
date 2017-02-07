@@ -20,9 +20,16 @@ var student_array = [];
  */
 $(document).ready(function(){
     updateData();
+
     $("div.container").on('click', '.btn-success', function() {
-        console.log("Add button works");
+        console.log("Add button works via click");
         addStudent();
+    });
+    $(document).keypress(function(e) {
+        if(e.which == 13) {
+            console.log("Add button works via Enter");
+            addStudent();
+        }
     });
 
 /**
@@ -42,7 +49,16 @@ $(document).ready(function(){
 
     $("div.container").on('click', '.btn-info', function() {
         console.log("AJAX button works");
-
+        $.ajax({
+            dataType: 'json',
+            method: 'post',
+            url: 'http://s-apis.learningfuze.com/sgt/get',
+            data: {'api_key': 'hfx7uq7nuo'},
+            success: function(result) {
+                student_array = result.data;
+                updateData();
+            }
+        });
     })
 });
 
@@ -147,7 +163,6 @@ function addStudentToDom(studentObj) {
     $("tbody").append(studentListItem);
 }
 
-
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
@@ -168,3 +183,5 @@ function removeStudent(currentStudent) {
 /**
  * Listen for the document to load and reset the data to the initial state
  */
+
+
