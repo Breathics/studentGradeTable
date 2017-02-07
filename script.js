@@ -6,7 +6,9 @@
  * @type {Array}
  */
 // var student_array = [];
-var student_array = [{name: "Andy", course: "Math", grade: 100}, {name: "Tara", course: "Baking", grade: 50}];
+var student_array = [{name: "Andy", course: "Coding", grade: 20, ID: 0}, {name: "Tara", course: "Baking", grade: 100, ID:1},
+    {name: "Tyler", course: "Paradise Bowls", grade: 100, ID:2},{name: "David", course: "Gaming", grade: 100, ID:3},
+    {name: "Jasmine", course: "Make-Up", grade: 100, ID:4}];
 
 /**
  * inputIds - id's of the elements that are used to add students
@@ -35,9 +37,8 @@ $(document).ready(function(){
     $("div.container").on('click', '.btn-danger', function() {
         console.log("Delete button works");
         var currentStudent = $(this);
-
-        // removeStudent();
-        // updateStudentList();
+        removeStudent(currentStudent);
+        updateData();
     });
 });
 
@@ -61,6 +62,7 @@ function addStudent() {
         return;
     } else {
         student_array.push(studentData);
+        studentData.ID = student_array.length-1;
     }
     clearAddStudentForm();
     addStudentToDom(studentData);
@@ -89,7 +91,11 @@ function calculateAverage() {
         sum += gradeValue;
     }
     var studentAverage = sum / student_array.length;
-    console.log("Student Grade Average: ", studentAverage);
+    if (isNaN(studentAverage)){
+        console.log("Student Grade Average: No Student Data Available");
+    } else {
+        console.log("Student Grade Average: ", studentAverage);
+    }
     return studentAverage;
 }
 
@@ -97,15 +103,17 @@ function calculateAverage() {
  * updateData - centralized function to update the average and call student list update - ** Confused... **
  */
 function updateData() {
-
+    updateStudentList();
+    calculateAverage();
 }
 
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body - ** Confused... **
  */
 function updateStudentList() {
+    console.log("Update student list for loop works");
+    $("tbody tr").remove();
     for (var i = 0; i < student_array.length; i++){
-        console.log("Update student list for loop works");
         addStudentToDom(student_array[i]);
     }
 }
@@ -125,11 +133,11 @@ function addStudentToDom(studentObj) {
         type: "button",
         class: "btn btn-danger",
         onclick: "",
-        text: "Delete"
+        text: "Delete",
+        ID: studentObj.ID
     });
     deletecellDomElement.append(delButton);
-    studentListItem.append(nameDomElement).append(courseDomElement).append(gradeDomElement)
-        .append(deletecellDomElement);
+    studentListItem.append(nameDomElement, courseDomElement, gradeDomElement, deletecellDomElement);
     $("tbody").append(studentListItem);
 }
 
@@ -139,7 +147,19 @@ function addStudentToDom(studentObj) {
  */
 function reset() {
     $("tbody tr").remove();
-    student_array = [];
+    // student_array = [];
+    student_array = [{name: "Andy", course: "Coding", grade: 20, ID: 0}, {name: "Tara", course: "Baking", grade: 100, ID:1},
+        {name: "Tyler", course: "Paradise Bowls", grade: 100, ID:2},{name: "David", course: "Gaming", grade: 100, ID:3},
+        {name: "Jasmine", course: "Make-Up", grade: 100, ID:4}];
+    updateStudentList();
+}
+
+function removeStudent(currentStudent) {
+    var studentIndex = parseInt(currentStudent.attr("ID"));
+    student_array.splice(studentIndex, 1);
+    for (var i = 0; i < student_array.length; i++){
+        student_array[i]["ID"] = i;
+    }
 }
 
 /**
