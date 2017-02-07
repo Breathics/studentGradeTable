@@ -39,6 +39,11 @@ $(document).ready(function(){
         removeStudent(currentStudent);
         updateData();
     });
+
+    $("div.container").on('click', '.btn-info', function() {
+        console.log("AJAX button works");
+
+    })
 });
 
 /**
