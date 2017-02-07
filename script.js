@@ -5,10 +5,10 @@
  * student_array - global array to hold student objects
  * @type {Array}
  */
-// var student_array = [];
-var student_array = [{name: "Andy", course: "Coding", grade: 20, ID: 0}, {name: "Tara", course: "Baking", grade: 100, ID:1},
-    {name: "Tyler", course: "Paradise Bowls", grade: 100, ID:2},{name: "David", course: "Gaming", grade: 100, ID:3},
-    {name: "Jasmine", course: "Make-Up", grade: 100, ID:4}];
+var student_array = [];
+// var student_array = [{name: "Andy", course: "Coding", grade: 20, ID: 0}, {name: "Tara", course: "Baking", grade: 100, ID:1},
+//     {name: "Tyler", course: "Paradise Bowls", grade: 100, ID:2},{name: "David", course: "Gaming", grade: 100, ID:3},
+//     {name: "Jasmine", course: "Make-Up", grade: 100, ID:4}];
 
 /**
  * inputIds - id's of the elements that are used to add students
@@ -19,8 +19,7 @@ var student_array = [{name: "Andy", course: "Coding", grade: 20, ID: 0}, {name: 
  * addClicked - Event Handler when user clicks the add button
  */
 $(document).ready(function(){
-    // reset();
-    updateStudentList();
+    updateData();
     $("div.container").on('click', '.btn-success', function() {
         console.log("Add button works");
         addStudent();
@@ -91,10 +90,13 @@ function calculateAverage() {
         sum += gradeValue;
     }
     var studentAverage = sum / student_array.length;
+    studentAverage = Math.round(studentAverage);
     if (isNaN(studentAverage)){
         console.log("Student Grade Average: No Student Data Available");
+        $('.avgGrade').html("0");
     } else {
         console.log("Student Grade Average: ", studentAverage);
+        $('.avgGrade').html(studentAverage);
     }
     return studentAverage;
 }
@@ -111,7 +113,6 @@ function updateData() {
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body - ** Confused... **
  */
 function updateStudentList() {
-    console.log("Update student list for loop works");
     $("tbody tr").remove();
     for (var i = 0; i < student_array.length; i++){
         addStudentToDom(student_array[i]);
@@ -147,10 +148,7 @@ function addStudentToDom(studentObj) {
  */
 function reset() {
     $("tbody tr").remove();
-    // student_array = [];
-    student_array = [{name: "Andy", course: "Coding", grade: 20, ID: 0}, {name: "Tara", course: "Baking", grade: 100, ID:1},
-        {name: "Tyler", course: "Paradise Bowls", grade: 100, ID:2},{name: "David", course: "Gaming", grade: 100, ID:3},
-        {name: "Jasmine", course: "Make-Up", grade: 100, ID:4}];
+    student_array = [];
     updateStudentList();
 }
 
