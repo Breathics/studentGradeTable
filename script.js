@@ -6,9 +6,6 @@
  * @type {Array}
  */
 var student_array = [];
-// var student_array = [{name: "Andy", course: "Coding", grade: 20, ID: 0}, {name: "Tara", course: "Baking", grade: 100, ID:1},
-//     {name: "Tyler", course: "Paradise Bowls", grade: 100, ID:2},{name: "David", course: "Gaming", grade: 100, ID:3},
-//     {name: "Jasmine", course: "Make-Up", grade: 100, ID:4}];
 
 /**
  * inputIds - id's of the elements that are used to add students
@@ -55,7 +52,7 @@ $(document).ready(function(){
             url: 'http://s-apis.learningfuze.com/sgt/get',
             data: {'api_key': 'hfx7uq7nuo'},
             success: function(result) {
-                student_array = result.data;
+                student_array = student_array.concat(result.data);
                 updateData();
             }
         });
