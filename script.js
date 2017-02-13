@@ -17,7 +17,7 @@ var student_array = [];
  */
 $(document).ready(function(){
     updateData();
-
+    retrieveData();
     $("div.container").on('click', '.btn-success', function() {
         console.log("Add button works via click");
         addStudent();
@@ -46,17 +46,8 @@ $(document).ready(function(){
 
     $("div.container").on('click', '.btn-info', function() {
         console.log("AJAX button works");
-        $.ajax({
-            dataType: 'json',
-            method: 'post',
-            url: 'http://s-apis.learningfuze.com/sgt/get',
-            data: {'api_key': 'hfx7uq7nuo'},
-            success: function(result) {
-                student_array = student_array.concat(result.data);
-                updateData();
-            }
-        });
-    })
+        retrieveData();
+    });
 });
 
 /**
@@ -79,13 +70,92 @@ function addStudent() {
         return;
     } else {
         student_array.push(studentData);
-        studentData.ID = student_array.length-1;
+        addToStudentDB(studentData);
     }
     clearAddStudentForm();
     addStudentToDom(studentData);
     calculateAverage(student_array);
     console.log(studentData);
     return studentData;
+}
+
+/**
+ * retrieveData - retrieves data from student database through an ajax call that takes in an API key
+ */
+function retrieveData(){
+    $.ajax({
+        dataType: 'json',
+        method: 'post',
+        url: 'http://s-apis.learningfuze.com/sgt/get',
+        data: {'api_key': 'hfx7uq7nuo'},
+        success: function(result) {
+            student_array = student_array.concat(result.data);
+            updateData();
+        }
+    });
+}
+
+/**
+ * addToStudentDB
+ */
+function addToStudentDB(studentObj){
+    var form = new FormData();
+    form.append("api_key", "hfX7uq7nuo");
+    form.append("name", studentObj.name);
+    form.append("course", studentObj.course);
+    form.append("grade", studentObj.grade);
+    $.ajax({
+        // async: true,
+        method: 'post',
+        url: 'http://s-apis.learningfuze.com/sgt/create',
+        processData: false,
+        contentType: false,
+        mimeType: 'multipart/form-data',
+        data: form,
+        success: function(response){
+            console.log(response);
+            var new_id = parseInt(response.replace(/[^0-9]/g,''));
+            return studentObj.id = new_id;
+        }
+    });
+    // var form = new FormData();
+    // form.append("api_key", "hfX7uq7nuo");
+    // form.append("name", studentObj.name);
+    // form.append("course", studentObj.course);
+    // form.append("grade", studentObj.grade);
+    //
+    // var settings = {
+    //     "async": true,
+    //     "crossDomain": true,
+    //     "url": "http://s-apis.learningfuze.com/sgt/create",
+    //     "method": "POST",
+    //     "processData": false,
+    //     "contentType": false,
+    //     "mimeType": "multipart/form-data",
+    //     "data": form
+    // };
+    //
+    // $.ajax(settings).done(function (response) {
+    //     console.log(response);
+    // });
+}
+
+/**
+ * delStudentFromDB
+ */
+function delStudentFromDB(studentIndex){
+    $.ajax({
+        method: 'post',
+        url: 'http://s-apis.learningfuze.com/sgt/delete',
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+        data: {
+            'api_key': 'hfX7uq7nuo',
+            'student_id': studentIndex
+        },
+        success: function(response){
+            console.log(response);
+        }
+    });
 }
 
 /**
@@ -153,7 +223,7 @@ function addStudentToDom(studentObj) {
         class: "btn btn-danger",
         onclick: "",
         text: "Delete",
-        ID: studentObj.ID
+        ID: studentObj.id
     });
     deletecellDomElement.append(delButton);
     studentListItem.append(nameDomElement, courseDomElement, gradeDomElement, deletecellDomElement);
@@ -169,16 +239,30 @@ function reset() {
     updateStudentList();
 }
 
+/**
+ * removeStudent - take in currentStudent, will reindex each student with a new ID every time a student is removed
+ * from the DOM
+ * @param currentStudent
+ */
+
 function removeStudent(currentStudent) {
-    var studentIndex = parseInt(currentStudent.attr("ID"));
-    student_array.splice(studentIndex, 1);
+    var studentIndicator = parseInt(currentStudent.attr("ID"));
     for (var i = 0; i < student_array.length; i++){
-        student_array[i]["ID"] = i;
+        if (studentIndicator == student_array[i].id){
+            student_array.splice(i, 1);
+        }
     }
+    // student_array.splice(studentIndex, 1);
+    delStudentFromDB(studentIndicator);
+    // for (var i = 0; i < student_array.length; i++){
+    //     student_array[i]["ID"] = i;
+    // }
 }
 
 /**
  * Listen for the document to load and reset the data to the initial state
  */
+
+
 
 
