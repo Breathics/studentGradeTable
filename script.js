@@ -69,11 +69,10 @@ function addStudent() {
     } else if (isNaN(studentGrade)) {
         return;
     } else {
-        student_array.push(studentData);
-        addToStudentDB(studentData);
+      addToStudentDB(studentData);
+      student_array.push(studentData);
     }
     clearAddStudentForm();
-    addStudentToDom(studentData);
     calculateAverage(student_array);
     console.log(studentData);
     return studentData;
@@ -113,9 +112,10 @@ function addToStudentDB(studentObj){
         mimeType: 'multipart/form-data',
         data: form,
         success: function(response){
-            console.log(response);
+            console.log("adding to db", response);
             var new_id = parseInt(response.replace(/[^0-9]/g,''));
-            return studentObj.id = new_id;
+            studentObj.id = new_id;
+            addStudentToDom(studentObj);
         }
     });
     // var form = new FormData();
@@ -221,9 +221,9 @@ function addStudentToDom(studentObj) {
     var delButton = $("<button>", {
         type: "button",
         class: "btn btn-danger",
+        id: studentObj.id,
         onclick: "",
-        text: "Delete",
-        ID: studentObj.id
+        text: "Delete"
     });
     deletecellDomElement.append(delButton);
     studentListItem.append(nameDomElement, courseDomElement, gradeDomElement, deletecellDomElement);
@@ -246,10 +246,11 @@ function reset() {
  */
 
 function removeStudent(currentStudent) {
-    var studentIndicator = parseInt(currentStudent.attr("ID"));
+    var studentIndicator = parseInt(currentStudent.attr("id"));
     for (var i = 0; i < student_array.length; i++){
         if (studentIndicator == student_array[i].id){
             student_array.splice(i, 1);
+            delStudentFromDB(studentIndicator);
         }
     }
     // student_array.splice(studentIndex, 1);
@@ -262,7 +263,3 @@ function removeStudent(currentStudent) {
 /**
  * Listen for the document to load and reset the data to the initial state
  */
-
-
-
-
