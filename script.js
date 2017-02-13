@@ -105,6 +105,7 @@ function addToStudentDB(studentObj){
     form.append("grade", studentObj.grade);
     $.ajax({
         // async: true,
+        dataType: 'json',
         method: 'post',
         url: 'http://s-apis.learningfuze.com/sgt/create',
         processData: false,
@@ -113,8 +114,7 @@ function addToStudentDB(studentObj){
         data: form,
         success: function(response){
             console.log("adding to db", response);
-            var new_id = parseInt(response.replace(/[^0-9]/g,''));
-            studentObj.id = new_id;
+            studentObj.id = response.new_id;
             addStudentToDom(studentObj);
         }
     });
@@ -254,7 +254,7 @@ function removeStudent(currentStudent) {
         }
     }
     // student_array.splice(studentIndex, 1);
-    delStudentFromDB(studentIndicator); // TODO Figure out why the student doesn't get deleted the first time
+    // delStudentFromDB(studentIndicator); // TODO Figure out why the student doesn't get deleted the first time
     // for (var i = 0; i < student_array.length; i++){
     //     student_array[i]["ID"] = i;
     // }
