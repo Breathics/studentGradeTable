@@ -253,7 +253,7 @@ function removeStudent(currentStudent) {
         }
     }
     // student_array.splice(studentIndex, 1);
-    delStudentFromDB(studentIndicator);
+    delStudentFromDB(studentIndicator); // TODO Figure out why the student doesn't get deleted the first time
     // for (var i = 0; i < student_array.length; i++){
     //     student_array[i]["ID"] = i;
     // }
