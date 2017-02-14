@@ -15,7 +15,7 @@ var student_array = [];
 /**
  * addClicked - Event Handler when user clicks the add button
  */
-$(document).ready(function(){
+$(document).ready(function() {
     updateData();
     retrieveData();
     $("div.container").on('click', '.btn-success', function() {
@@ -23,15 +23,15 @@ $(document).ready(function(){
         addStudent();
     });
     $(document).keypress(function(e) {
-        if(e.which == 13) {
+        if (e.which == 13) {
             console.log("Add button works via Enter");
             addStudent();
         }
     });
 
-/**
- * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
- */
+    /**
+     * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
+     */
     $("div.container").on('click', '.btn-default', function() {
         console.log("Cancel button works");
         clearAddStudentForm();
@@ -69,8 +69,8 @@ function addStudent() {
     } else if (isNaN(studentGrade)) {
         return;
     } else {
-      addToStudentDB(studentData);
-      student_array.push(studentData);
+        addToStudentDB(studentData);
+        student_array.push(studentData);
     }
     clearAddStudentForm();
     calculateAverage(student_array);
@@ -81,12 +81,14 @@ function addStudent() {
 /**
  * retrieveData - retrieves data from student database through an ajax call that takes in an API key
  */
-function retrieveData(){
+function retrieveData() {
     $.ajax({
         dataType: 'json',
         method: 'post',
         url: 'http://s-apis.learningfuze.com/sgt/get',
-        data: {'api_key': 'hfx7uq7nuo'},
+        data: {
+            'api_key': 'hfx7uq7nuo'
+        },
         success: function(result) {
             student_array = student_array.concat(result.data);
             updateData();
@@ -97,7 +99,7 @@ function retrieveData(){
 /**
  * addToStudentDB
  */
-function addToStudentDB(studentObj){
+function addToStudentDB(studentObj) {
     var form = new FormData();
     form.append("api_key", "hfX7uq7nuo");
     form.append("name", studentObj.name);
@@ -112,47 +114,29 @@ function addToStudentDB(studentObj){
         contentType: false,
         mimeType: 'multipart/form-data',
         data: form,
-        success: function(response){
+        success: function(response) {
             console.log("adding to db", response);
             studentObj.id = response.new_id;
             addStudentToDom(studentObj);
         }
     });
-    // var form = new FormData();
-    // form.append("api_key", "hfX7uq7nuo");
-    // form.append("name", studentObj.name);
-    // form.append("course", studentObj.course);
-    // form.append("grade", studentObj.grade);
-    //
-    // var settings = {
-    //     "async": true,
-    //     "crossDomain": true,
-    //     "url": "http://s-apis.learningfuze.com/sgt/create",
-    //     "method": "POST",
-    //     "processData": false,
-    //     "contentType": false,
-    //     "mimeType": "multipart/form-data",
-    //     "data": form
-    // };
-    //
-    // $.ajax(settings).done(function (response) {
-    //     console.log(response);
-    // });
 }
 
 /**
  * delStudentFromDB
  */
-function delStudentFromDB(studentIndex){
+function delStudentFromDB(studentIndex) {
     $.ajax({
         method: 'post',
         url: 'http://s-apis.learningfuze.com/sgt/delete',
-        headers: {'content-type': 'application/x-www-form-urlencoded'},
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+        },
         data: {
             'api_key': 'hfX7uq7nuo',
             'student_id': studentIndex
         },
-        success: function(response){
+        success: function(response) {
             console.log(response);
         }
     });
@@ -173,13 +157,13 @@ function clearAddStudentForm() {
  */
 function calculateAverage() {
     var sum = 0;
-    for(var i = 0; i < student_array.length; i++){
+    for (var i = 0; i < student_array.length; i++) {
         var gradeValue = parseInt(student_array[i].grade);
         sum += gradeValue;
     }
     var studentAverage = sum / student_array.length;
     studentAverage = Math.round(studentAverage);
-    if (isNaN(studentAverage)){
+    if (isNaN(studentAverage)) {
         console.log("Student Grade Average: No Student Data Available");
         $('.avgGrade').html("0");
     } else {
@@ -202,7 +186,7 @@ function updateData() {
  */
 function updateStudentList() {
     $("tbody tr").remove();
-    for (var i = 0; i < student_array.length; i++){
+    for (var i = 0; i < student_array.length; i++) {
         addStudentToDom(student_array[i]);
     }
 }
@@ -244,20 +228,14 @@ function reset() {
  * from the DOM
  * @param currentStudent
  */
-
 function removeStudent(currentStudent) {
     var studentIndicator = parseInt(currentStudent.attr("id"));
-    for (var i = 0; i < student_array.length; i++){
-        if (studentIndicator == student_array[i].id){
+    for (var i = 0; i < student_array.length; i++) {
+        if (studentIndicator == student_array[i].id) {
             student_array.splice(i, 1);
             delStudentFromDB(studentIndicator);
         }
     }
-    // student_array.splice(studentIndex, 1);
-    // delStudentFromDB(studentIndicator); // TODO Figure out why the student doesn't get deleted the first time
-    // for (var i = 0; i < student_array.length; i++){
-    //     student_array[i]["ID"] = i;
-    // }
 }
 
 /**
