@@ -97,20 +97,20 @@ function retrieveData() {
  * addToStudentDB
  */
 function addToStudentDB(studentObj) {
-    var form = new FormData();
-    form.append("name", studentObj.name);
-    form.append("course", studentObj.course);
-    form.append("grade", studentObj.grade);
     $.ajax({
         // async: true,
-        dataType: 'json',
-        method: 'post',
-        url: 'http://localhost:3000/sgt/students/create',
-        processData: false,
-        contentType: false,
-        mimeType: 'multipart/form-data',
-        data: form,
-        success: function(response) {
+        'dataType': 'json',
+        'method': 'post',
+        'url': 'http://localhost:3000/sgt/students/create',
+        'data': {
+            name: studentObj.name,
+            course: studentObj.course,
+            grade: studentObj.grade
+        },
+        'headers': {
+            'content-type': 'application/x-www-form-urlencoded',
+        },
+            success: function(response) {
             console.log("adding to db", response);
             studentObj.id = response.new_id;
             addStudentToDom(studentObj);
