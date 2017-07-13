@@ -84,11 +84,8 @@ function addStudent() {
 function retrieveData() {
     $.ajax({
         dataType: 'json',
-        method: 'post',
-        url: 'http://s-apis.learningfuze.com/sgt/get',
-        data: {
-            'api_key': 'hfx7uq7nuo'
-        },
+        method: 'GET',
+        url: 'http://localhost:3000/sgt/students/get',
         success: function(result) {
             student_array = student_array.concat(result.data);
             updateData();
@@ -101,7 +98,6 @@ function retrieveData() {
  */
 function addToStudentDB(studentObj) {
     var form = new FormData();
-    form.append("api_key", "hfX7uq7nuo");
     form.append("name", studentObj.name);
     form.append("course", studentObj.course);
     form.append("grade", studentObj.grade);
@@ -109,7 +105,7 @@ function addToStudentDB(studentObj) {
         // async: true,
         dataType: 'json',
         method: 'post',
-        url: 'http://s-apis.learningfuze.com/sgt/create',
+        url: 'http://localhost:3000/sgt/students/create',
         processData: false,
         contentType: false,
         mimeType: 'multipart/form-data',
@@ -128,13 +124,9 @@ function addToStudentDB(studentObj) {
 function delStudentFromDB(studentIndex) {
     $.ajax({
         method: 'post',
-        url: 'http://s-apis.learningfuze.com/sgt/delete',
-        headers: {
-            'content-type': 'application/x-www-form-urlencoded'
-        },
+        url: 'http://localhost:3000/sgt/students/delete',
         data: {
-            'api_key': 'hfX7uq7nuo',
-            'student_id': studentIndex
+            'id': studentIndex
         },
         success: function(response) {
             console.log(response);
